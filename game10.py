@@ -5,12 +5,12 @@ import random
 import time
 import numpy as np
 
-# Khởi tạo MediaPipe
+# MediaPipe
 mp_hands = mp.solutions.hands
 hands = mp_hands.Hands(max_num_hands=2)
 mp_draw = mp.solutions.drawing_utils
 
-# Mở webcam và đặt kích thước khung hình
+# cam
 cap = cv2.VideoCapture(0)
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
@@ -18,7 +18,7 @@ cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
 score = 0
 game_over = False
 
-# Khởi tạo Pygame
+# Pygame
 pygame.init()
 screen = pygame.display.set_mode((800, 600))
 pygame.display.set_caption('Hand Counting Game')
@@ -35,19 +35,17 @@ def draw_gradient_background(surface, color1, color2):
         pygame.draw.line(surface, color, (0, y), (surface.get_width(), y))
 
 while not game_over:
-    target_number = random.randint(0, 10)  # Tổng số ngón tay có thể từ 0 đến 10
+    target_number = random.randint(0, 10)  
     start_time = time.time()
-    timer = 10  # 10 giây cho mỗi lượt
-
+    timer = 10 
     correct = False
 
     while time.time() - start_time < timer and not correct:
-        # Xử lý sự kiện Pygame
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 game_over = True
 
-        # Đọc hình ảnh từ webcam
+        
         success, img = cap.read()
         if not success:
             continue  # Nếu không lấy được khung hình, bỏ qua vòng lặp này
@@ -95,11 +93,12 @@ while not game_over:
 
                 finger_count = fingers.count(1)
                 total_fingers += finger_count
+                
 
-                # Vẽ bàn tay và số ngón tay lên hình ảnh
-                mp_draw.draw_landmarks(img, hand_landmarks, mp_hands.HAND_CONNECTIONS)
-                cv2.putText(img, f'{displayed_hand} Hand: {finger_count}', (10, 30 if displayed_hand == 'Left' else 60),
-                            cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
+                # # Vẽ bàn tay và số ngón tay lên hình ảnh
+                # mp_draw.draw_landmarks(img, hand_landmarks, mp_hands.HAND_CONNECTIONS)
+                # cv2.putText(img, f'{displayed_hand} Hand: {finger_count}', (10, 30 if displayed_hand == 'Left' else 60),
+                #             cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
 
         if total_fingers == target_number:
             correct = True
